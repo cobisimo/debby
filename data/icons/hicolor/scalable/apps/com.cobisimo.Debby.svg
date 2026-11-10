@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="100%" height="100%">
+  <defs>
+    <!-- Honeycomb Outer Rim Gradient -->
+    <linearGradient id="rim-grad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#f8e45c" />
+      <stop offset="100%" stop-color="#e5a50a" />
+    </linearGradient>
+
+    <!-- Honeycomb Inner Fill Gradient -->
+    <linearGradient id="cell-grad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#f6d32d" />
+      <stop offset="100%" stop-color="#d08b00" />
+    </linearGradient>
+
+    <!-- Box Face Light -->
+    <linearGradient id="box-top" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" stop-opacity="0.9" />
+      <stop offset="100%" stop-color="#f6f5f4" stop-opacity="0.7" />
+    </linearGradient>
+
+    <!-- Shadow filter for modern elevation -->
+    <filter id="drop-shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="4" stdDeviation="3" flood-color="#1c71d8" flood-opacity="0.3" />
+    </filter>
+
+    <filter id="inner-shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="2" stdDeviation="1.5" flood-color="#000000" flood-opacity="0.15" />
+    </filter>
+  </defs>
+
+  <!-- App Icon Squircle Background (GNOME Style standard radius) -->
+  <rect x="8" y="8" width="112" height="112" rx="26" fill="url(#bg-grad)" />
+
+  <!-- Outer Hexagon Frame -->
+  <polygon points="64,22 98,41.6 98,80.4 64,100 30,80.4 30,41.6" fill="none" stroke="url(#rim-grad)" stroke-width="7.5" stroke-linejoin="round" filter="url(#drop-shadow)" />
+
+  <!-- Inner Hexagonal Cell Fill -->
+  <polygon points="64,28 92,44.2 92,77.8 64,94 36,77.8 36,44.2" fill="url(#cell-grad)" opacity="0.25" />
+
+  <!-- Central Package Box Group -->
+  <g filter="url(#inner-shadow)">
+    <!-- Box Body (Isometric Cube Concept) -->
+    <!-- Left Face -->
+    <path d="M 44,56 L 64,67 L 64,86 L 44,75 Z" fill="#ffffff" opacity="0.75" />
+    <!-- Right Face -->
+    <path d="M 84,56 L 64,67 L 64,86 L 84,75 Z" fill="#ffffff" opacity="0.6" />
+    <!-- Top Flaps / Opening -->
+    <path d="M 44,56 L 64,45 L 84,56 L 64,67 Z" fill="url(#box-top)" />
+
+    <!-- Open Flap Accents -->
+    <path d="M 44,56 L 37,50 L 57,41 L 64,45 Z" fill="#ffffff" opacity="0.9" />
+    <path d="M 84,56 L 91,50 L 71,41 L 64,45 Z" fill="#ffffff" opacity="0.8" />
+  </g>
+
+  <!-- Installation Arrow (Pointing Down into Box) -->
+  <g filter="url(#drop-shadow)">
+    <!-- Arrow Stem & Head -->
+    <path d="M 64,31 L 64,58 M 53,48 L 64,59 L 75,48" fill="none" stroke="#ffffff" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round" />
+  </g>
+
+  <!-- Clean Subtle Highlight Ring -->
+  <polygon points="64,22 98,41.6 98,80.4 64,100 30,80.4 30,41.6" fill="none" stroke="#ffffff" stroke-width="1" opacity="0.4" stroke-linejoin="round" />
+</svg>

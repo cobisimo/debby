@@ -1,0 +1,163 @@
+using Gtk 4.0;
+using Adw 1;
+
+Adw.ToolbarView toolbar {
+  [top]
+  Adw.HeaderBar header_bar {
+    decoration-layout: ":minimize,close";
+    [start]
+    Button back_button {
+      icon-name: "go-previous-symbolic";
+      tooltip-text: _("Back");
+      visible: false;
+    }
+    [title]
+    Label { label: _("Debby"); }
+    [end]
+    MenuButton menu_button {
+      icon-name: "open-menu-symbolic";
+      tooltip-text: _("Main Menu");
+      menu-model: app_menu;
+    }
+  }
+
+  content: Overlay {
+    Stack main_stack {
+      transition-type: crossfade;
+      Gtk.StackPage {
+        name: "package";
+        child: Adw.Clamp package_page {
+        margin-top: 24;
+        margin-bottom: 24;
+        margin-start: 16;
+        margin-end: 16;
+        child: Box list_box {
+          orientation: vertical;
+          spacing: 20;
+          Adw.StatusPage empty_page {
+            icon-name: "com.cobisimo.Debby";
+            title: _("Install a Debian package");
+            description: _("Choose a .deb package to view its details and install it.");
+            Button select_button { label: _("Choose Package…"); }
+          }
+          Adw.PreferencesGroup info_group {
+            title: _("Package Information");
+            visible: false;
+            Adw.ActionRow name_row { title: _("Package name"); subtitle: "-"; }
+            Adw.ActionRow version_row { title: _("Version (installed → selected)"); subtitle: "-"; }
+            Adw.ActionRow desc_row { title: _("Description"); subtitle: "-"; }
+          }
+          Box controls_box {
+            orientation: horizontal;
+            spacing: 12;
+            halign: center;
+            visible: false;
+            Button install_button {
+              label: _("Install Package");
+              sensitive: false;
+              styles [
+                "suggested-action",
+                "pill",
+              ]
+            }
+            Button uninstall_button {
+              label: _("Uninstall");
+              styles [
+                "destructive-action",
+                "pill",
+              ]
+              visible: false;
+            }
+          }
+        };
+        };
+      }
+      Gtk.StackPage {
+        name: "progress";
+        child: Box progress_page {
+          orientation: vertical;
+          valign: center;
+          spacing: 12;
+          margin-start: 24;
+          margin-end: 24;
+        Box progress_box {
+          orientation: vertical;
+          spacing: 12;
+          halign: center;
+          Image progress_icon {
+            icon-name: "emblem-ok-symbolic";
+            pixel-size: 48;
+            halign: center;
+            visible: false;
+            styles ["success-icon"]
+          }
+          Label progress_label {
+            styles [
+              "title-3",
+            ]
+          }
+          ProgressBar progress_bar {
+            show-text: true;
+            width-request: 320;
+            margin-top: 16;
+          }
+        }
+        Label progress_error {
+          wrap: true;
+          justify: center;
+          selectable: true;
+          visible: false;
+        }
+        };
+      }
+    }
+    [overlay]
+    ScrolledWindow console_scroll {
+      halign: fill;
+      valign: end;
+      height-request: 220;
+      margin-top: 16;
+      margin-bottom: 16;
+      margin-start: 16;
+      margin-end: 16;
+      visible: false;
+      styles [
+        "terminal-overlay",
+      ]
+      TextView console {
+        editable: false;
+        monospace: true;
+        wrap-mode: word_char;
+        styles [
+          "terminal-overlay-text",
+        ]
+      }
+    }
+  };
+  [bottom]
+  Box footer {
+    orientation: horizontal;
+    halign: end;
+    margin-end: 16;
+    margin-top: 6;
+    margin-bottom: 6;
+    ToggleButton advanced_check {
+      icon-name: "utilities-terminal-symbolic";
+      tooltip-text: _("Details");
+      styles ["flat"]
+      accessibility {
+        label: _("Details");
+      }
+    }
+  }
+}
+
+menu app_menu {
+  item { label: _("Choose Package…"); action: "win.open"; }
+  item { label: _("About Debby"); action: "win.about"; }
+}
+
+Adw.ActionRow file_row {
+  title: _("Choose a .deb package");
+  subtitle: _("No package selected");
+}

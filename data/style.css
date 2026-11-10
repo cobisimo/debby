@@ -1,0 +1,49 @@
+.app_icon {
+  -gtk-icon-size: 128px;
+  margin-bottom: 24px;
+}
+
+.card {
+  border-radius: 12px;
+  padding: 12px;
+}
+
+.boxed-list {
+  border-radius: 12px;
+}
+
+.loading-frame {
+  min-height: 200px;
+}
+
+.error-message {
+  margin: 12px;
+}
+
+.success-icon {
+  color: @success_color;
+  background-color: alpha(@success_color, 0.14);
+  border-radius: 999px;
+  padding: 16px;
+}
+
+textview.view {
+  font-family: monospace;
+}
+
+.terminal-overlay {
+  background-color: alpha(#1e1e1e, 0.72);
+  border: 1px solid alpha(currentColor, 0.14);
+  border-radius: 12px;
+}
+
+.terminal-overlay > viewport {
+  background-color: transparent;
+  border-radius: 12px;
+}
+
+.terminal-overlay-text {
+  background-color: transparent;
+  color: @view_fg_color;
+  padding: 12px;
+}

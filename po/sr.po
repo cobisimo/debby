@@ -1,0 +1,184 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: debby\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-11-10 01:16+0100\n"
+"PO-Revision-Date: 2026-11-10 00:00+0100\n"
+"Last-Translator: Debby contributors\n"
+"Language-Team: Serbian\n"
+"Language: sr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+
+#: src/main.rs:78
+msgid "No declared dependencies."
+msgstr "Нема декларисаних зависности."
+
+#: src/main.rs:128 src/main.rs:133 src/main.rs:137
+msgid "Install Package"
+msgstr "Инсталирај пакет"
+
+#: src/main.rs:146
+msgid "Upgrade Package"
+msgstr "Надогради пакет"
+
+#: src/main.rs:148
+msgid "Reinstall Package"
+msgstr "Поново инсталирај пакет"
+
+#: src/main.rs:189
+msgid "Not installed"
+msgstr "Није инсталирано"
+
+#: src/main.rs:199
+msgid "Package name"
+msgstr "Назив пакета"
+
+#: src/main.rs:201
+msgid "Version"
+msgstr "Верзија"
+
+#: src/main.rs:203
+msgid "Dependencies"
+msgstr "Зависности"
+
+#: src/main.rs:212 src/main.rs:602
+msgid "Error reading package"
+msgstr "Грешка при читању пакета"
+
+#: src/main.rs:239
+msgid "Debian Package Installer"
+msgstr "Инсталатер Дебиан пакета"
+
+#: src/main.rs:287
+msgid "Uninstall"
+msgstr "Деинсталирај"
+
+#: src/main.rs:317
+msgid "Debby contributors"
+msgstr "Сарадници пројекта Деби"
+
+#: src/main.rs:319
+msgid ""
+"Debby makes installing local Debian packages simple. Open a .deb file to "
+"view package details, compare installed and selected versions, and install, "
+"upgrade, reinstall, or uninstall the package. Follow each operation on a "
+"dedicated progress screen and view dependencies and command output in the "
+"Details panel."
+msgstr ""
+"Деби олакшава инсталирање локалних Дебиан пакета. Отворите .deb датотеку да "
+"видите податке о пакету, упоредите инсталирану и изабрану верзију и "
+"инсталирате, надоградите, поново инсталирате или деинсталирате пакет. "
+"Пратите сваку радњу на засебном екрану напретка и погледајте зависности и "
+"излаз наредби у окну са детаљима."
+
+#: src/main.rs:424 src/main.rs:434 src/main.rs:442
+msgid "Uninstalling…"
+msgstr "Деинсталација…"
+
+#: src/main.rs:426 src/main.rs:594
+msgid "Starting installation…"
+msgstr "Покретање инсталације…"
+
+#: src/main.rs:436 src/main.rs:450
+msgid "Installation in progress…"
+msgstr "Инсталација је у току…"
+
+#: src/main.rs:444
+msgid "Installing…"
+msgstr "Инсталација…"
+
+#: src/main.rs:465
+msgid "Complete"
+msgstr "Завршено"
+
+#: src/main.rs:469
+msgid "Uninstallation complete"
+msgstr "Деинсталација је завршена"
+
+#: src/main.rs:471
+msgid "Installation complete"
+msgstr "Инсталација завршена"
+
+#: src/main.rs:477
+msgid "Package installed successfully!"
+msgstr "Пакет је успешно инсталиран!"
+
+#: src/main.rs:489
+msgid "Uninstallation failed"
+msgstr "Деинсталација није успела"
+
+#: src/main.rs:491
+msgid "Installation failed"
+msgstr "Инсталација није успела"
+
+#: src/main.rs:495 src/main.rs:501
+msgid "Error"
+msgstr "Грешка"
+
+#: src/main.rs:499
+msgid "Installation failed."
+msgstr "Инсталација није успела."
+
+#: src/main.rs:523
+msgid "Choose a .deb package"
+msgstr "Изаберите .deb пакет"
+
+#: src/main.rs:524
+msgid "Open"
+msgstr "Отвори"
+
+#: src/main.rs:525
+msgid "Cancel"
+msgstr "Откажи"
+
+#: src/main.rs:531
+msgid "Debian packages (*.deb)"
+msgstr "Дебиан пакети (*.deb)"
+
+#: src/main.rs:631
+msgid "Unable to start pkexec."
+msgstr "Није могуће покренути pkexec."
+
+#: src/main.rs:659
+msgid "Authorization was cancelled or the process failed."
+msgstr "Корисник је отказао ауторизацију или процес није успео."
+
+msgid "Back"
+msgstr "Назад"
+
+msgid "Debby"
+msgstr "Деби"
+
+msgid "Main Menu"
+msgstr "Главни мени"
+
+msgid "Install a Debian package"
+msgstr "Инсталирајте Дебиан пакет"
+
+msgid "Choose a .deb package to view its details and install it."
+msgstr "Изаберите .deb пакет да видите детаље и инсталирате га."
+
+msgid "Choose Package…"
+msgstr "Изаберите пакет…"
+
+msgid "Package Information"
+msgstr "Информације о пакету"
+
+msgid "Version (installed → selected)"
+msgstr "Верзија (инсталирана → изабрана)"
+
+msgid "Description"
+msgstr "Опис"
+
+msgid "Details"
+msgstr "Детаљи"
+
+msgid "About Debby"
+msgstr "О програму Деби"
+
+msgid "No package selected"
+msgstr "Пакет није изабран"
