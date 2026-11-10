@@ -5,6 +5,8 @@ Rust, GTK 4, and libadwaita. It lets you review a package's name, version, and
 description before installing it, with support for upgrading or reinstalling
 packages that are already installed.
 
+![Debby application screenshot](data/screenshot.png)
+
 ## Build a Debian package
 
 Install Rust/Cargo and the native build dependencies listed below. Packaging
