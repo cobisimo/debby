@@ -405,8 +405,7 @@ fn build_ui(app: &libadwaita::Application, initial_path: Option<String>) {
                 removing = uninstall;
                 main_stack.set_visible_child_name("progress");
                 back_button.set_visible(false);
-                footer.set_visible(false);
-                advanced_check.set_active(false);
+                footer.set_visible(true);
                 progress_error.set_visible(false);
                 progress_error.set_text("");
                 console_buffer_ui.set_text(&format!(
