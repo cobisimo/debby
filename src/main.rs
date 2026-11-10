@@ -286,7 +286,7 @@ fn build_ui(app: &libadwaita::Application, initial_path: Option<String>) {
         .unwrap();
     let main_stack = template.object::<gtk4::Stack>("main_stack").unwrap();
     let back_button = template.object::<gtk4::Button>("back_button").unwrap();
-    let footer = template.object::<gtk4::Box>("footer").unwrap();
+    let footer = template.object::<libadwaita::Bin>("footer").unwrap();
     let progress_error = template.object::<gtk4::Label>("progress_error").unwrap();
     main_stack.set_visible_child_name("package");
     let advanced_check = template

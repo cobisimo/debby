@@ -90,8 +90,12 @@ Adw.ToolbarView toolbar {
             halign: center;
             visible: false;
             styles ["success-icon"]
+            accessibility {
+              label: _("Complete");
+            }
           }
           Label progress_label {
+            label: "";
             styles [
               "title-3",
             ]
@@ -103,6 +107,7 @@ Adw.ToolbarView toolbar {
           }
         }
         Label progress_error {
+          label: "";
           wrap: true;
           justify: center;
           selectable: true;
@@ -135,20 +140,19 @@ Adw.ToolbarView toolbar {
     }
   };
   [bottom]
-  Box footer {
-    orientation: horizontal;
+  Adw.Bin footer {
     halign: end;
     margin-end: 16;
     margin-top: 6;
     margin-bottom: 6;
-    ToggleButton advanced_check {
+    child: ToggleButton advanced_check {
       icon-name: "utilities-terminal-symbolic";
       tooltip-text: _("Details");
       styles ["flat"]
       accessibility {
         label: _("Details");
       }
-    }
+    };
   }
 }
 
