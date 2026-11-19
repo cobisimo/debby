@@ -18,16 +18,16 @@ msgid "No declared dependencies."
 msgstr "Нема декларисаних зависности."
 
 #: src/main.rs:128 src/main.rs:133 src/main.rs:137
-msgid "Install Package"
-msgstr "Инсталирај пакет"
+msgid "Install"
+msgstr "Инсталирај"
 
 #: src/main.rs:146
-msgid "Upgrade Package"
-msgstr "Надогради пакет"
+msgid "Upgrade"
+msgstr "Надогради"
 
 #: src/main.rs:148
-msgid "Reinstall Package"
-msgstr "Поново инсталирај пакет"
+msgid "Reinstall"
+msgstr "Поново инсталирај"
 
 #: src/main.rs:189
 msgid "Not installed"
@@ -165,6 +165,9 @@ msgstr "Изаберите .deb пакет да видите детаље и и�
 msgid "Choose Package…"
 msgstr "Изаберите пакет…"
 
+msgid "Information"
+msgstr "Информације"
+
 msgid "Package Information"
 msgstr "Информације о пакету"
 
@@ -174,6 +177,9 @@ msgstr "Верзија (инсталирана → изабрана)"
 msgid "Description"
 msgstr "Опис"
 
+msgid "Run"
+msgstr "Покрени"
+
 msgid "Details"
 msgstr "Детаљи"
 
@@ -182,3 +188,35 @@ msgstr "О програму Деби"
 
 msgid "No package selected"
 msgstr "Пакет није изабран"
+
+#: src/main.rs
+msgid "Checking dependencies…"
+msgstr "Провера зависности…"
+
+#: src/main.rs
+msgid "Dependency information unavailable"
+msgstr "Подаци о зависностима нису доступни"
+
+#: src/main.rs
+msgid "Declared dependency (not an installed-status check)"
+msgstr "Декларисана зависност (није провера стања инсталације)"
+
+#: src/main.rs
+msgid "Will be installed"
+msgstr "Биће инсталирано"
+
+#: src/main.rs
+msgid "Additional packages to be installed"
+msgstr "Додатни пакети који ће бити инсталирани"
+
+#: src/main.rs
+msgid "APT preview, including indirect dependencies. The plan may change before installation."
+msgstr "Преглед APT плана, укључујући посредне зависности. План се може променити пре инсталације."
+
+#: src/main.rs
+msgid "No additional packages will be installed."
+msgstr "Неће бити инсталирани додатни пакети."
+
+#: src/main.rs
+msgid "APT installation plan unavailable"
+msgstr "APT план инсталације није доступан"

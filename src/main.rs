@@ -1,17 +1,19 @@
 #![forbid(unsafe_code)]
 
-use gtk4::glib;
 use gtk4::prelude::*;
+use gtk4::{gio, glib};
 use libadwaita::prelude::*;
-use std::cell::RefCell;
+use std::cell::{Cell, RefCell};
 use std::env;
 use std::io::{BufRead, BufReader};
-use std::path::Path;
+use std::path::{Path, PathBuf};
 use std::process::{Command, Stdio};
 use std::rc::Rc;
 use std::sync::mpsc;
 use std::thread;
 use std::time::Duration;
+
+mod package_icon;
 
 const GETTEXT_DOMAIN: &str = "debby";
 
@@ -54,19 +56,285 @@ struct DebInfo {
 enum InstallationMessage {
     Started(bool),
     Output(String),
-    Success,
+    Success(Vec<PathBuf>),
     Failed(String),
 }
 
-fn get_deb_dependencies(path: &Path) -> String {
-    Command::new("dpkg-deb")
-        .args(["-f", &path.to_string_lossy(), "Depends"])
+fn installed_desktop_entries(package: &str) -> Vec<PathBuf> {
+    let Ok(output) = Command::new("dpkg-query")
+        .args(["-L", "--", package])
         .output()
-        .ok()
-        .filter(|output| output.status.success())
-        .map(|output| String::from_utf8_lossy(&output.stdout).trim().to_string())
-        .filter(|dependencies| !dependencies.is_empty())
-        .unwrap_or_else(|| tr("No declared dependencies."))
+    else {
+        return Vec::new();
+    };
+    if !output.status.success() {
+        return Vec::new();
+    }
+    String::from_utf8_lossy(&output.stdout)
+        .lines()
+        .map(PathBuf::from)
+        .filter(|path| path.is_absolute() && path.extension().is_some_and(|ext| ext == "desktop"))
+        .collect()
+}
+
+fn visible_desktop_app(desktop_entries: &[PathBuf]) -> Option<gio::DesktopAppInfo> {
+    desktop_entries.iter().find_map(|path| {
+        let app = gio::DesktopAppInfo::from_filename(path)?;
+        (app.should_show() && !app.is_hidden()).then_some(app)
+    })
+}
+
+fn get_deb_dependencies(path: &Path) -> Result<String, String> {
+    let output = Command::new("dpkg-deb")
+        .arg("-f")
+        .arg(path)
+        .arg("Depends")
+        .output()
+        .map_err(|error| error.to_string())?;
+    if !output.status.success() {
+        return Err(String::from_utf8_lossy(&output.stderr).trim().to_string());
+    }
+    Ok(String::from_utf8_lossy(&output.stdout).trim().to_string())
+}
+
+const INSTALL_OPTIONS: &[&str] = &["install", "-y", "--reinstall", "--allow-downgrades"];
+
+// An Inst line has an old version in brackets only for upgrades/reinstalls.
+// Keep architecture qualifiers, and exclude the selected package itself.
+fn newly_planned_packages(output: &str, selected: &str) -> Vec<String> {
+    let mut packages = Vec::new();
+    for line in output.lines() {
+        let Some(rest) = line.strip_prefix("Inst ") else {
+            continue;
+        };
+        let mut fields = rest.split_whitespace();
+        let Some(name) = fields.next() else { continue };
+        if fields.next().is_some_and(|field| field.starts_with('('))
+            && name.split(':').next() != Some(selected)
+        {
+            packages.push(name.to_string());
+        }
+    }
+    packages.sort();
+    packages.dedup();
+    packages
+}
+
+fn dependency_matches(group: &str, planned: &str) -> bool {
+    group.split('|').any(|alternative| {
+        let name = alternative
+            .trim()
+            .split(|c: char| c.is_whitespace() || c == '(')
+            .next()
+            .unwrap_or_default();
+        let (base, qualifier) = name.split_once(':').unwrap_or((name, ""));
+        let (planned_base, architecture) = planned.split_once(':').unwrap_or((planned, ""));
+        base == planned_base
+            && (qualifier.is_empty()
+                || qualifier == "any"
+                || qualifier == "native"
+                || architecture.is_empty()
+                || qualifier == architecture)
+    })
+}
+
+#[cfg(test)]
+mod dependency_tests {
+    use super::{dependency_matches, newly_planned_packages};
+
+    #[test]
+    fn plan_excludes_selected_upgrades_and_reinstalls() {
+        let output = "Inst selected (1.0 local [amd64])\n\
+                      Inst new-lib:amd64 (2.0 Debian [amd64])\n\
+                      Inst upgraded [1.0] (2.0 Debian [amd64])\n\
+                      Inst reinstalled [1.0] (1.0 Debian [amd64])\n\
+                      Conf new-lib:amd64 (2.0 Debian [amd64])\n";
+        assert_eq!(
+            newly_planned_packages(output, "selected"),
+            vec!["new-lib:amd64"]
+        );
+        assert!(newly_planned_packages("", "selected").is_empty());
+    }
+
+    #[test]
+    fn matches_alternatives_without_confusing_constraints_or_names() {
+        assert!(dependency_matches(
+            "other (>= 1) | libfoo:any (<< 3)",
+            "libfoo:amd64"
+        ));
+        assert!(dependency_matches("libfoo:amd64 (>= 2)", "libfoo:amd64"));
+        assert!(!dependency_matches("libfoo:arm64", "libfoo:amd64"));
+        assert!(!dependency_matches("libfoo-extra | other", "libfoo"));
+        assert!(!dependency_matches("missing | other", "unrelated"));
+    }
+}
+
+fn simulate_install(path: &Path, package: &str) -> Result<Vec<String>, String> {
+    let path = path.canonicalize().map_err(|error| error.to_string())?;
+    let output = Command::new("apt-get")
+        .arg("--simulate")
+        .args(INSTALL_OPTIONS)
+        .arg(path)
+        .env("LC_ALL", "C")
+        .output()
+        .map_err(|error| error.to_string())?;
+    if !output.status.success() {
+        return Err(format!(
+            "{}\n{}",
+            String::from_utf8_lossy(&output.stderr),
+            String::from_utf8_lossy(&output.stdout)
+        )
+        .trim()
+        .to_string());
+    }
+    Ok(newly_planned_packages(
+        &String::from_utf8_lossy(&output.stdout),
+        package,
+    ))
+}
+
+#[derive(Clone)]
+struct DependencyView {
+    group: libadwaita::PreferencesGroup,
+    rows: gtk4::ListBox,
+    generation: Rc<Cell<u64>>,
+    stack: gtk4::Stack,
+    details: gtk4::Box,
+    pending: Rc<RefCell<Option<(PathBuf, String)>>>,
+    icon: gtk4::Image,
+}
+
+impl DependencyView {
+    fn reset(&self) {
+        let generation = self.generation.get().wrapping_add(1);
+        self.generation.set(generation);
+        while let Some(child) = self.rows.first_child() {
+            self.rows.remove(&child);
+        }
+        self.icon.set_icon_name(Some("package-x-generic"));
+        self.pending.borrow_mut().take();
+        self.stack.set_visible_child_name("information");
+        self.details.set_visible(false);
+    }
+
+    fn load_icon(&self, path: PathBuf, package: String) {
+        let generation = self.generation.get();
+        let (tx, rx) = mpsc::channel();
+        thread::spawn(move || {
+            let _ = tx.send(package_icon::load(&path, &package));
+        });
+        let view = self.clone();
+        glib::timeout_add_local(Duration::from_millis(50), move || {
+            if view.generation.get() != generation {
+                return glib::ControlFlow::Break;
+            }
+            match rx.try_recv() {
+                Ok(Some(bytes)) => {
+                    let stream =
+                        gio::MemoryInputStream::from_bytes(&glib::Bytes::from_owned(bytes));
+                    if let Ok(pixbuf) =
+                        gtk4::gdk_pixbuf::Pixbuf::from_stream(&stream, gio::Cancellable::NONE)
+                    {
+                        view.icon
+                            .set_paintable(Some(&gtk4::gdk::Texture::for_pixbuf(&pixbuf)));
+                    }
+                }
+                Err(mpsc::TryRecvError::Empty) => return glib::ControlFlow::Continue,
+                _ => {}
+            }
+            glib::ControlFlow::Break
+        });
+    }
+
+    fn load_pending(&self) {
+        if self.stack.visible_child_name().as_deref() != Some("dependencies") {
+            return;
+        }
+        let pending = self.pending.borrow_mut().take();
+        if let Some((path, package)) = pending {
+            self.load(path, package, self.generation.get());
+        }
+    }
+
+    fn row(&self, title: &str, subtitle: &str) {
+        let row = libadwaita::ActionRow::builder()
+            .title(title)
+            .subtitle(subtitle)
+            .title_lines(0)
+            .subtitle_lines(0)
+            .build();
+        row.set_use_markup(false);
+        self.rows.append(&row);
+    }
+
+    fn load(&self, path: PathBuf, package: String, generation: u64) {
+        self.group.set_visible(true);
+        self.row(&tr("Checking dependencies…"), "");
+        let (tx, rx) = mpsc::channel();
+        thread::spawn(move || {
+            let declared = get_deb_dependencies(&path);
+            let plan = simulate_install(&path, &package);
+            let _ = tx.send((declared, plan));
+        });
+        let view = self.clone();
+        glib::timeout_add_local(Duration::from_millis(50), move || {
+            if view.generation.get() != generation {
+                return glib::ControlFlow::Break;
+            }
+            let (declared, plan) = match rx.try_recv() {
+                Ok(result) => result,
+                Err(mpsc::TryRecvError::Empty) => return glib::ControlFlow::Continue,
+                Err(mpsc::TryRecvError::Disconnected) => {
+                    view.row(&tr("Dependency information unavailable"), "");
+                    return glib::ControlFlow::Break;
+                }
+            };
+            while let Some(child) = view.rows.first_child() {
+                view.rows.remove(&child);
+            }
+            match declared {
+                Ok(declared) if declared.is_empty() => {
+                    view.row(&tr("No declared dependencies."), "")
+                }
+                Ok(declared) => {
+                    for group in declared
+                        .split(',')
+                        .map(str::trim)
+                        .filter(|group| !group.is_empty())
+                    {
+                        let matches: Vec<_> = plan
+                            .as_ref()
+                            .ok()
+                            .into_iter()
+                            .flatten()
+                            .filter(|name| dependency_matches(group, name))
+                            .cloned()
+                            .collect();
+                        let status = if matches.is_empty() {
+                            tr("Declared dependency (not an installed-status check)")
+                        } else {
+                            format!("{}: {}", tr("Will be installed"), matches.join(", "))
+                        };
+                        view.row(group, &status);
+                    }
+                }
+                Err(error) => view.row(&tr("Dependency information unavailable"), &error),
+            }
+            match plan {
+                Ok(packages) => {
+                    if !packages.is_empty() {
+                        view.row(&tr("Additional packages to be installed"),
+                            &tr("APT preview, including indirect dependencies. The plan may change before installation."));
+                        for package in packages {
+                            view.row(&package, &tr("Will be installed"));
+                        }
+                    }
+                }
+                Err(error) => view.row(&tr("APT installation plan unavailable"), &error),
+            }
+            glib::ControlFlow::Break
+        });
+    }
 }
 
 fn get_deb_info(path: &str) -> Option<DebInfo> {
@@ -110,22 +378,22 @@ fn get_deb_info(path: &str) -> Option<DebInfo> {
     Some(info)
 }
 
-fn install_button_label(package: &str, version: &str) -> String {
+fn install_button_label(package: &str, version: &str) -> (String, &'static str, bool) {
     let output = Command::new("dpkg-query")
         .args(["-W", "-f=${Status}\t${Version}", package])
         .output();
 
     let Ok(output) = output else {
-        return tr("Install Package");
+        return (tr("Install"), "system-software-install-symbolic", false);
     };
 
     let installed = String::from_utf8_lossy(&output.stdout);
     let Some((status, installed_version)) = installed.split_once('\t') else {
-        return tr("Install Package");
+        return (tr("Install"), "system-software-install-symbolic", false);
     };
 
     if status != "install ok installed" {
-        return tr("Install Package");
+        return (tr("Install"), "system-software-install-symbolic", false);
     }
 
     let is_upgrade = Command::new("dpkg")
@@ -134,9 +402,9 @@ fn install_button_label(package: &str, version: &str) -> String {
         .is_ok_and(|status| status.success());
 
     if is_upgrade {
-        tr("Upgrade Package")
+        (tr("Upgrade"), "software-update-available-symbolic", false)
     } else {
-        tr("Reinstall Package")
+        (tr("Reinstall"), "view-refresh-symbolic", true)
     }
 }
 
@@ -163,8 +431,17 @@ fn load_deb_file(
     uninstall_button: &gtk4::Button,
     console_buffer: &gtk4::TextBuffer,
     controls_box: &gtk4::Box,
+    package_launch_button: &gtk4::Button,
+    launch_app: &Rc<RefCell<Option<gio::DesktopAppInfo>>>,
+    dependencies: &DependencyView,
 ) {
-    let path_str = path.to_string_lossy().to_string();
+    dependencies.reset();
+    package_launch_button.set_visible(false);
+    install_button.remove_css_class("warning-action");
+    install_button.add_css_class("suggested-action");
+    launch_app.borrow_mut().take();
+    let absolute_path = path.canonicalize().unwrap_or_else(|_| path.to_path_buf());
+    let path_str = absolute_path.to_string_lossy().to_string();
     let file_name = path
         .file_name()
         .unwrap_or_default()
@@ -177,6 +454,11 @@ fn load_deb_file(
         name_row.set_subtitle(&info.package);
         let installed = installed_version(&info.package);
         uninstall_button.set_visible(installed.is_some());
+        if installed.is_some() {
+            let app = visible_desktop_app(&installed_desktop_entries(&info.package));
+            package_launch_button.set_visible(app.is_some());
+            *launch_app.borrow_mut() = app;
+        }
         let installed = installed.unwrap_or_else(|| tr("Not installed"));
         version_row.set_subtitle(&format!("{}  →  {}", installed, info.version));
         desc_row.set_subtitle(&info.description);
@@ -184,18 +466,38 @@ fn load_deb_file(
         empty_page.set_visible(false);
         info_group.set_visible(true);
         controls_box.set_visible(true);
-        install_button.set_label(&install_button_label(&info.package, &info.version));
+        let (label, icon_name, is_reinstall) = install_button_label(&info.package, &info.version);
+        let content = install_button
+            .child()
+            .expect("install button must have content");
+        let icon = content
+            .first_child()
+            .and_downcast::<gtk4::Image>()
+            .expect("install button content must start with an image");
+        let text = content
+            .last_child()
+            .and_downcast::<gtk4::Label>()
+            .expect("install button content must end with a label");
+        text.set_label(&label);
+        icon.set_icon_name(Some(icon_name));
+        install_button.update_property(&[gtk4::accessible::Property::Label(&label)]);
+        if is_reinstall {
+            install_button.remove_css_class("suggested-action");
+            install_button.add_css_class("warning-action");
+        }
         console_buffer.set_text(&format!(
-            "{}: {}\n{}: {}\n\n{}:\n{}\n",
+            "{}: {}\n{}: {}\n",
             tr("Package name"),
             info.package,
             tr("Version"),
-            info.version,
-            tr("Dependencies"),
-            get_deb_dependencies(path)
+            info.version
         ));
+        dependencies.load_icon(absolute_path.clone(), info.package.clone());
+        *dependencies.pending.borrow_mut() = Some((absolute_path, info.package));
+        dependencies.details.set_visible(true);
         install_button.set_sensitive(true);
     } else {
+        selected_file_path.borrow_mut().take();
         uninstall_button.set_visible(false);
         empty_page.set_visible(true);
         info_group.set_visible(false);
@@ -271,11 +573,24 @@ fn build_ui(app: &libadwaita::Application, initial_path: Option<String>) {
         .object::<libadwaita::ActionRow>("desc_row")
         .unwrap();
     info_group.set_visible(false);
+    let dependencies = DependencyView {
+        group: template.object("dependencies_group").unwrap(),
+        rows: template.object::<gtk4::ListBox>("dependency_rows").unwrap(),
+        generation: Rc::new(Cell::new(0)),
+        stack: template.object("package_stack").unwrap(),
+        details: template.object("package_details").unwrap(),
+        pending: Rc::new(RefCell::new(None)),
+        icon: template.object("package_icon").unwrap(),
+    };
+    dependencies.stack.connect_visible_child_name_notify({
+        let dependencies = dependencies.clone();
+        move |_| dependencies.load_pending()
+    });
 
     // --- AKCIJA ZA INSTALACIJU U ADW HEADER BARU ---
     let install_button = template.object::<gtk4::Button>("install_button").unwrap();
     let uninstall_button = template.object::<gtk4::Button>("uninstall_button").unwrap();
-    uninstall_button.set_label(&tr("Uninstall"));
+
     let controls_box = template.object::<gtk4::Box>("controls_box").unwrap();
     controls_box.set_visible(false);
     let progress_box = template.object::<gtk4::Box>("progress_box").unwrap();
@@ -288,6 +603,33 @@ fn build_ui(app: &libadwaita::Application, initial_path: Option<String>) {
     let back_button = template.object::<gtk4::Button>("back_button").unwrap();
     let footer = template.object::<libadwaita::Bin>("footer").unwrap();
     let progress_error = template.object::<gtk4::Label>("progress_error").unwrap();
+    let launch_button = template.object::<gtk4::Button>("launch_button").unwrap();
+    let launch_app: Rc<RefCell<Option<gio::DesktopAppInfo>>> = Rc::new(RefCell::new(None));
+    let package_launch_button = template
+        .object::<gtk4::Button>("package_launch_button")
+        .unwrap();
+    let launch_action = gio::SimpleAction::new("launch", None);
+    launch_action.connect_activate({
+        let launch_app = launch_app.clone();
+        let window = window.clone();
+        move |_, _| {
+            if let Some(app) = launch_app.borrow().as_ref() {
+                let context = gtk4::prelude::WidgetExt::display(&window).app_launch_context();
+                if let Err(error) = app.launch(&[], Some(&context)) {
+                    let dialog = libadwaita::AlertDialog::builder()
+                        .heading(tr("Unable to launch application"))
+                        .body(error.to_string())
+                        .build();
+                    dialog.add_response("close", &tr("Close"));
+                    dialog.set_close_response("close");
+                    dialog.present(Some(&window));
+                }
+            }
+        }
+    });
+    window.add_action(&launch_action);
+    launch_button.set_action_name(Some("win.launch"));
+    package_launch_button.set_action_name(Some("win.launch"));
     main_stack.set_visible_child_name("package");
     let advanced_check = template
         .object::<gtk4::ToggleButton>("advanced_check")
@@ -345,6 +687,9 @@ fn build_ui(app: &libadwaita::Application, initial_path: Option<String>) {
         let uninstall_button = uninstall_button.clone();
         let console_buffer = console_buffer.clone();
         let controls_box = controls_box.clone();
+        let package_launch_button = package_launch_button.clone();
+        let launch_app = launch_app.clone();
+        let dependencies = dependencies.clone();
         move |button| {
             let path = selected_file_path.borrow().clone();
             if let Some(path) = path {
@@ -361,6 +706,9 @@ fn build_ui(app: &libadwaita::Application, initial_path: Option<String>) {
                     &uninstall_button,
                     &console_buffer,
                     &controls_box,
+                    &package_launch_button,
+                    &launch_app,
+                    &dependencies,
                 );
             }
             main_stack.set_visible_child_name("package");
@@ -387,6 +735,8 @@ fn build_ui(app: &libadwaita::Application, initial_path: Option<String>) {
     let mut installation_running = false;
     let mut removing = false;
 
+    let launch_app_ui = launch_app.clone();
+    let package_launch_button_ui = package_launch_button.clone();
     glib::timeout_add_local(Duration::from_millis(50), move || {
         let msg = match rx.try_recv() {
             Ok(msg) => msg,
@@ -400,6 +750,9 @@ fn build_ui(app: &libadwaita::Application, initial_path: Option<String>) {
         };
         match msg {
             InstallationMessage::Started(uninstall) => {
+                launch_button.set_visible(false);
+                package_launch_button_ui.set_visible(false);
+                launch_app_ui.borrow_mut().take();
                 progress_bar_ui.set_visible(true);
                 open_action.set_enabled(false);
                 removing = uninstall;
@@ -446,7 +799,14 @@ fn build_ui(app: &libadwaita::Application, initial_path: Option<String>) {
                 let bottom = adjustment.upper() - adjustment.page_size();
                 adjustment.set_value(bottom.max(adjustment.lower()));
             }
-            InstallationMessage::Success => {
+            InstallationMessage::Success(desktop_entries) => {
+                let app = if removing {
+                    None
+                } else {
+                    visible_desktop_app(&desktop_entries)
+                };
+                launch_button.set_visible(app.is_some());
+                *launch_app_ui.borrow_mut() = app;
                 progress_bar_ui.set_visible(false);
                 open_action.set_enabled(true);
                 back_button.set_visible(true);
@@ -467,6 +827,8 @@ fn build_ui(app: &libadwaita::Application, initial_path: Option<String>) {
                 file_row_ui.set_subtitle(&tr("Package installed successfully!"));
             }
             InstallationMessage::Failed(err_msg) => {
+                launch_button.set_visible(false);
+                launch_app_ui.borrow_mut().take();
                 progress_bar_ui.set_visible(false);
                 open_action.set_enabled(true);
                 back_button.set_visible(true);
@@ -506,7 +868,10 @@ fn build_ui(app: &libadwaita::Application, initial_path: Option<String>) {
     let info_group_clone = info_group.clone();
     let console_buffer_clone = console_buffer.clone();
     let controls_box_clone = controls_box.clone();
+    let package_launch_button_clone = package_launch_button.clone();
+    let launch_app_clone = launch_app.clone();
     let window_clone = window.clone();
+    let dependencies_clone = dependencies.clone();
 
     select_button.connect_clicked(move |_| {
         let file_dialog = gtk4::FileChooserNative::builder()
@@ -535,9 +900,12 @@ fn build_ui(app: &libadwaita::Application, initial_path: Option<String>) {
         let file_path = file_path_clone.clone();
         let console_buffer = console_buffer_clone.clone();
         let controls_box = controls_box_clone.clone();
+        let package_launch_button = package_launch_button_clone.clone();
+        let launch_app = launch_app_clone.clone();
         let chooser_stack = chooser_stack.clone();
         let chooser_back = chooser_back.clone();
         let chooser_footer = chooser_footer.clone();
+        let dependencies = dependencies_clone.clone();
 
         file_dialog.connect_response(move |dialog, response| {
             if response == gtk4::ResponseType::Accept {
@@ -556,6 +924,9 @@ fn build_ui(app: &libadwaita::Application, initial_path: Option<String>) {
                             &uninstall_button,
                             &console_buffer,
                             &controls_box,
+                            &package_launch_button,
+                            &launch_app,
+                            &dependencies,
                         );
                         chooser_stack.set_visible_child_name("package");
                         chooser_back.set_visible(false);
@@ -586,6 +957,7 @@ fn build_ui(app: &libadwaita::Application, initial_path: Option<String>) {
                 thread::spawn(move || {
                     let _ = tx_worker.send(InstallationMessage::Started(removing));
 
+                    let package = get_deb_info(&path_string).map(|info| info.package);
                     let args = if removing {
                         let Some(info) = get_deb_info(&path_string) else {
                             let _ = tx_worker
@@ -600,14 +972,10 @@ fn build_ui(app: &libadwaita::Application, initial_path: Option<String>) {
                             info.package,
                         ]
                     } else {
-                        vec![
-                            "apt-get".to_string(),
-                            "install".to_string(),
-                            "-y".to_string(),
-                            "--reinstall".to_string(),
-                            "--allow-downgrades".to_string(),
-                            path_string,
-                        ]
+                        let mut args = vec!["apt-get".to_string()];
+                        args.extend(INSTALL_OPTIONS.iter().map(|option| option.to_string()));
+                        args.push(path_string);
+                        args
                     };
 
                     let child = Command::new("pkexec")
@@ -642,7 +1010,15 @@ fn build_ui(app: &libadwaita::Application, initial_path: Option<String>) {
                     let _ = stderr_thread.join();
                     match status {
                         Ok(status) if status.success() => {
-                            let _ = tx_worker.send(InstallationMessage::Success);
+                            let desktop_entries = if removing {
+                                Vec::new()
+                            } else {
+                                package
+                                    .as_deref()
+                                    .map(installed_desktop_entries)
+                                    .unwrap_or_default()
+                            };
+                            let _ = tx_worker.send(InstallationMessage::Success(desktop_entries));
                         }
                         Ok(_) => {
                             let _ = tx_worker.send(InstallationMessage::Failed(tr(
@@ -674,6 +1050,9 @@ fn build_ui(app: &libadwaita::Application, initial_path: Option<String>) {
             &uninstall_button,
             &console_buffer,
             &controls_box,
+            &package_launch_button,
+            &launch_app,
+            &dependencies,
         );
     }
 }

@@ -22,15 +22,15 @@ msgid "No declared dependencies."
 msgstr ""
 
 #: src/main.rs:128 src/main.rs:133 src/main.rs:137
-msgid "Install Package"
+msgid "Install"
 msgstr ""
 
 #: src/main.rs:146
-msgid "Upgrade Package"
+msgid "Upgrade"
 msgstr ""
 
 #: src/main.rs:148
-msgid "Reinstall Package"
+msgid "Reinstall"
 msgstr ""
 
 #: src/main.rs:189
@@ -164,6 +164,9 @@ msgstr ""
 msgid "Choose Package…"
 msgstr ""
 
+msgid "Information"
+msgstr ""
+
 msgid "Package Information"
 msgstr ""
 
@@ -173,6 +176,9 @@ msgstr ""
 msgid "Description"
 msgstr ""
 
+msgid "Run"
+msgstr ""
+
 msgid "Details"
 msgstr ""
 
@@ -180,4 +186,36 @@ msgid "About Debby"
 msgstr ""
 
 msgid "No package selected"
+msgstr ""
+
+#: src/main.rs
+msgid "Checking dependencies…"
+msgstr ""
+
+#: src/main.rs
+msgid "Dependency information unavailable"
+msgstr ""
+
+#: src/main.rs
+msgid "Declared dependency (not an installed-status check)"
+msgstr ""
+
+#: src/main.rs
+msgid "Will be installed"
+msgstr ""
+
+#: src/main.rs
+msgid "Additional packages to be installed"
+msgstr ""
+
+#: src/main.rs
+msgid "APT preview, including indirect dependencies. The plan may change before installation."
+msgstr ""
+
+#: src/main.rs
+msgid "No additional packages will be installed."
+msgstr ""
+
+#: src/main.rs
+msgid "APT installation plan unavailable"
 msgstr ""
