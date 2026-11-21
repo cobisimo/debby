@@ -1,15 +1,16 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128" width="100%" height="100%">
   <defs>
+
     <!-- Honeycomb Outer Rim Gradient -->
     <linearGradient id="rim-grad" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" stop-color="#f8e45c" />
-      <stop offset="100%" stop-color="#e5a50a" />
+      <stop offset="0%" stop-color="#ffad42" />
+      <stop offset="100%" stop-color="#d96808" />
     </linearGradient>
 
     <!-- Honeycomb Inner Fill Gradient -->
     <linearGradient id="cell-grad" x1="0%" y1="0%" x2="0%" y2="100%">
-      <stop offset="0%" stop-color="#f6d32d" />
-      <stop offset="100%" stop-color="#d08b00" />
+      <stop offset="0%" stop-color="#ff922b" />
+      <stop offset="100%" stop-color="#c65c00" />
     </linearGradient>
 
     <!-- Box Face Light -->
@@ -28,8 +29,6 @@
     </filter>
   </defs>
 
-  <!-- App Icon Squircle Background (GNOME Style standard radius) -->
-  <rect x="8" y="8" width="112" height="112" rx="26" fill="url(#bg-grad)" />
 
   <!-- Outer Hexagon Frame -->
   <polygon points="64,22 98,41.6 98,80.4 64,100 30,80.4 30,41.6" fill="none" stroke="url(#rim-grad)" stroke-width="7.5" stroke-linejoin="round" filter="url(#drop-shadow)" />

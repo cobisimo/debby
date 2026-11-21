@@ -50,7 +50,7 @@ pub(crate) fn build_ui(app: &libadwaita::Application, initial_path: Option<Strin
         .object::<gtk4::MenuButton>("menu_button")
         .expect("template must define menu_button");
     menu_button.set_menu_model(Some(&menu_model));
-    // --- GRUPA 1: IZBOR FAJLA ---
+    // --- GROUP 1: FILE SELECTION ---
     let file_row = template
         .object::<libadwaita::ActionRow>("file_row")
         .unwrap();
@@ -59,7 +59,7 @@ pub(crate) fn build_ui(app: &libadwaita::Application, initial_path: Option<Strin
         .object::<libadwaita::StatusPage>("empty_page")
         .unwrap();
 
-    // --- GRUPA 2: METAPODACI PAKETA ---
+    // --- GROUP 2: PACKAGE METADATA ---
     let info_group = template
         .object::<libadwaita::PreferencesGroup>("info_group")
         .unwrap();
@@ -79,7 +79,7 @@ pub(crate) fn build_ui(app: &libadwaita::Application, initial_path: Option<Strin
     info_group.set_visible(false);
     let dependencies = DependencyView::new(&template);
 
-    // --- AKCIJA ZA INSTALACIJU U ADW HEADER BARU ---
+    // --- INSTALL ACTION IN THE ADW HEADER BAR ---
     let install_button = template.object::<gtk4::Button>("install_button").unwrap();
     let uninstall_button = template.object::<gtk4::Button>("uninstall_button").unwrap();
 
@@ -235,7 +235,7 @@ pub(crate) fn build_ui(app: &libadwaita::Application, initial_path: Option<Strin
         launch_app.clone(),
         dependencies.clone(),
     );
-    // --- ASINHRONA INSTALACIJA ---
+    // --- ASYNCHRONOUS INSTALLATION ---
     for (button, removing) in [
         (install_button.clone(), false),
         (uninstall_button.clone(), true),

@@ -29,9 +29,7 @@ pub(super) fn connect_progress(
     footer: libadwaita::Bin,
     progress_error: gtk4::Label,
 ) -> mpsc::Sender<InstallationMessage> {
-    // --- KANAL ZA ASINHRONU KOMUNIKACIJU ---
-    // GLib 0.20 no longer exposes MainContext::channel, so poll a standard
-    // channel from the GTK main loop instead.
+    // --- ASYNCHRONOUS COMMUNICATION CHANNEL ---
     let (tx, rx) = mpsc::channel::<InstallationMessage>();
 
     let install_button_ui = install_button.clone();

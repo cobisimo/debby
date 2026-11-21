@@ -96,7 +96,7 @@ pub(super) fn connect_chooser(
     launch_app: Rc<RefCell<Option<gio::DesktopAppInfo>>>,
     dependencies: DependencyView,
 ) {
-    // --- LOGIKA ZA DIJALOG IZBORA FAJLA ---
+    // --- FILE SELECTION DIALOG LOGIC ---
     let file_row_clone = file_row.clone();
     let package_name_clone = package_name.clone();
     let package_version_row_clone = package_version_row.clone();
@@ -125,7 +125,7 @@ pub(super) fn connect_chooser(
 
         let filter = gtk4::FileFilter::new();
         filter.set_name(Some(&tr("Debian packages (*.deb)")));
-        // add_suffix zamenjeno sa add_pattern u starijim GTK filterima radi kompatibilnosti
+        // Replaced add_suffix with add_pattern for compatibility with older GTK filters.
         filter.add_pattern("*.deb");
 
         file_dialog.set_filter(&filter);
