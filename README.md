@@ -1,6 +1,6 @@
 # Debby
 
-Debby is a graphical installer for local Debian (`.deb`) packages, built with
+Debby is a simple graphical installer for local Debian (`.deb`) packages, built with
 Rust, GTK 4, and libadwaita. It lets you review a package's name, version, and
 description before installing it, with support for upgrading or reinstalling
 packages that are already installed.
@@ -34,8 +34,12 @@ cargo run
 ```
 
 English is the source and fallback language. Gettext selects translations using
-the system locale (`LC_ALL`, `LC_MESSAGES`, `LANG`) and `LANGUAGE`. Serbian
-(Cyrillic) is provided in `po/sr.po`; the translation template is `po/debby.pot`.
+the system locale (`LC_ALL`, `LC_MESSAGES`, `LANG`) and `LANGUAGE`. Translations
+are provided for Arabic (`ar`), Bengali (`bn`), German (`de`), Spanish (`es`),
+French (`fr`), Hindi (`hi`), Indonesian (`id`), Italian (`it`), Japanese (`ja`),
+Korean (`ko`), Brazilian Portuguese (`pt_BR`), Russian (`ru`), Serbian (Cyrillic,
+`sr`), Turkish (`tr`), Ukrainian (`uk`), and Simplified Chinese (`zh_CN`).
+Catalogs are in `po/<language>.po`; the translation template is `po/debby.pot`.
 Both Rust and Blueprint strings use the `debby` gettext domain. Package metadata
 and command output are supplied by dpkg/apt and retain their own language.
 

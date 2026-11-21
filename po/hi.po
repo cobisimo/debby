@@ -1,0 +1,227 @@
+# Hindi translations for Debby.
+# This file is distributed under the same license as the debby package.
+msgid ""
+msgstr ""
+"Project-Id-Version: debby 0.1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-11-21 20:07+0100\n"
+"PO-Revision-Date: 2026-11-21 00:00+0000\n"
+"Last-Translator: Debby contributors\n"
+"Language-Team: Hindi\n"
+"Language: hi\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: src/dependencies.rs:219
+msgid "Checking dependencies…"
+msgstr "निर्भरताएँ जाँची जा रही हैं…"
+
+#: src/dependencies.rs:235 src/dependencies.rs:268
+msgid "Dependency information unavailable"
+msgstr "निर्भरताओं की जानकारी उपलब्ध नहीं है"
+
+#: src/dependencies.rs:244
+msgid "No declared dependencies."
+msgstr "कोई घोषित निर्भरता नहीं है।"
+
+#: src/dependencies.rs:261
+msgid "Declared dependency (not an installed-status check)"
+msgstr "घोषित निर्भरता (इंस्टॉल होने की स्थिति की जाँच नहीं)"
+
+#: src/dependencies.rs:263 src/dependencies.rs:276
+msgid "Will be installed"
+msgstr "इंस्टॉल किया जाएगा"
+
+#: src/dependencies.rs:273
+msgid "Additional packages to be installed"
+msgstr "इंस्टॉल किए जाने वाले अतिरिक्त पैकेज"
+
+#: src/dependencies.rs:274
+msgid ""
+"APT preview, including indirect dependencies. The plan may change before "
+"installation."
+msgstr "अप्रत्यक्ष निर्भरताओं सहित APT पूर्वावलोकन। इंस्टॉलेशन से पहले योजना बदल सकती है।"
+
+#: src/dependencies.rs:280
+msgid "APT installation plan unavailable"
+msgstr "APT इंस्टॉलेशन योजना उपलब्ध नहीं है"
+
+#: src/operations.rs:31 src/ui/selection.rs:285
+msgid "Error reading package"
+msgstr "पैकेज पढ़ने में त्रुटि"
+
+#: src/operations.rs:55
+msgid "Unable to start pkexec."
+msgstr "pkexec शुरू नहीं किया जा सका।"
+
+#: src/operations.rs:91
+msgid "Authorization was cancelled or the process failed."
+msgstr "प्राधिकरण रद्द कर दिया गया या प्रक्रिया विफल रही।"
+
+#: src/package.rs:112 src/package.rs:117 src/package.rs:121
+msgid "Install"
+msgstr "इंस्टॉल करें"
+
+#: src/package.rs:130
+msgid "Upgrade"
+msgstr "अपग्रेड करें"
+
+#: src/package.rs:132
+msgid "Reinstall"
+msgstr "फिर से इंस्टॉल करें"
+
+#: src/ui/actions.rs:23
+msgid "Unable to launch application"
+msgstr "अनुप्रयोग शुरू नहीं किया जा सका"
+
+#: src/ui/actions.rs:26
+msgid "Close"
+msgstr "बंद करें"
+
+#: src/ui/mod.rs:32
+msgid "Debian Package Installer"
+msgstr "Debian पैकेज इंस्टॉलर"
+
+#: src/ui/mod.rs:141
+msgid "Debby contributors"
+msgstr "Debby के योगदानकर्ता"
+
+#: src/ui/mod.rs:143
+msgid ""
+"Debby makes installing local Debian packages simple. Open a .deb file to "
+"view package details, compare installed and selected versions, and install, "
+"upgrade, reinstall, or uninstall the package. Follow each operation on a "
+"dedicated progress screen and view dependencies and command output in the "
+"Details panel."
+msgstr "Debby स्थानीय Debian पैकेज इंस्टॉल करना आसान बनाता है। पैकेज का विवरण देखने, इंस्टॉल किए गए और चुने गए संस्करणों की तुलना करने और पैकेज को इंस्टॉल, अपग्रेड, फिर से इंस्टॉल या अनइंस्टॉल करने के लिए .deb फ़ाइल खोलें। हर कार्रवाई की प्रगति एक अलग स्क्रीन पर देखें और विवरण पैनल में निर्भरताएँ और कमांड आउटपुट देखें।"
+
+#: src/ui/mod.rs:259 src/ui/progress.rs:83
+msgid "Starting installation…"
+msgstr "इंस्टॉलेशन शुरू हो रहा है…"
+
+#: src/ui/progress.rs:81 src/ui/progress.rs:91 src/ui/progress.rs:99
+msgid "Uninstalling…"
+msgstr "अनइंस्टॉल हो रहा है…"
+
+#: src/ui/progress.rs:93 src/ui/progress.rs:107
+msgid "Installation in progress…"
+msgstr "इंस्टॉलेशन जारी है…"
+
+#: src/ui/progress.rs:101
+msgid "Installing…"
+msgstr "इंस्टॉल हो रहा है…"
+
+#: src/ui/progress.rs:130
+msgid "Complete"
+msgstr "पूर्ण"
+
+#: src/ui/progress.rs:134
+msgid "Uninstallation complete"
+msgstr "अनइंस्टॉलेशन पूर्ण"
+
+#: src/ui/progress.rs:136
+msgid "Installation complete"
+msgstr "इंस्टॉलेशन पूर्ण"
+
+#: src/ui/progress.rs:142
+msgid "Package installed successfully!"
+msgstr "पैकेज सफलतापूर्वक इंस्टॉल हो गया!"
+
+#: src/ui/progress.rs:156
+msgid "Uninstallation failed"
+msgstr "अनइंस्टॉलेशन विफल"
+
+#: src/ui/progress.rs:158
+msgid "Installation failed"
+msgstr "इंस्टॉलेशन विफल"
+
+#: src/ui/progress.rs:162 src/ui/progress.rs:168
+msgid "Error"
+msgstr "त्रुटि"
+
+#: src/ui/progress.rs:166
+msgid "Installation failed."
+msgstr "इंस्टॉलेशन विफल रहा।"
+
+#: src/ui/selection.rs:119
+msgid "Choose a .deb package"
+msgstr ".deb पैकेज चुनें"
+
+#: src/ui/selection.rs:120
+msgid "Open"
+msgstr "खोलें"
+
+#: src/ui/selection.rs:121
+msgid "Cancel"
+msgstr "रद्द करें"
+
+#: src/ui/selection.rs:127
+msgid "Debian packages (*.deb)"
+msgstr "Debian पैकेज (*.deb)"
+
+#: src/ui/selection.rs:233
+#, rust-format
+msgid "{version} (installed version is {installed})"
+msgstr "{version} (इंस्टॉल किया गया संस्करण {installed} है)"
+
+#: src/ui/selection.rs:239
+msgid "Unknown"
+msgstr "अज्ञात"
+
+#: src/ui/selection.rs:272
+msgid "Package name"
+msgstr "पैकेज का नाम"
+
+#: src/ui/selection.rs:274
+msgid "Version"
+msgstr "संस्करण"
+
+msgid "Back"
+msgstr "वापस"
+
+msgid "Debby"
+msgstr "Debby"
+
+msgid "Main Menu"
+msgstr "मुख्य मेन्यू"
+
+msgid "Install a Debian package"
+msgstr "Debian पैकेज इंस्टॉल करें"
+
+msgid "Choose a .deb package to view its details and install it."
+msgstr "विवरण देखने और इंस्टॉल करने के लिए .deb पैकेज चुनें।"
+
+msgid "Choose Package…"
+msgstr "पैकेज चुनें…"
+
+msgid "Information"
+msgstr "जानकारी"
+
+msgid "Package version"
+msgstr "पैकेज का संस्करण"
+
+msgid "Installed size"
+msgstr "इंस्टॉल होने के बाद का आकार"
+
+msgid "Description"
+msgstr "विवरण"
+
+msgid "Dependencies"
+msgstr "निर्भरताएँ"
+
+msgid "Run"
+msgstr "चलाएँ"
+
+msgid "Uninstall"
+msgstr "अनइंस्टॉल करें"
+
+msgid "Details"
+msgstr "विवरण"
+
+msgid "About Debby"
+msgstr "Debby के बारे में"
+
+msgid "No package selected"
+msgstr "कोई पैकेज नहीं चुना गया"

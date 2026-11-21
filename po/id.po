@@ -1,0 +1,227 @@
+# Indonesian translations for Debby.
+# This file is distributed under the same license as the debby package.
+msgid ""
+msgstr ""
+"Project-Id-Version: debby 0.1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-11-21 20:07+0100\n"
+"PO-Revision-Date: 2026-11-21 00:00+0000\n"
+"Last-Translator: Debby contributors\n"
+"Language-Team: Indonesian\n"
+"Language: id\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+
+#: src/dependencies.rs:219
+msgid "Checking dependencies…"
+msgstr "Memeriksa dependensi…"
+
+#: src/dependencies.rs:235 src/dependencies.rs:268
+msgid "Dependency information unavailable"
+msgstr "Informasi dependensi tidak tersedia"
+
+#: src/dependencies.rs:244
+msgid "No declared dependencies."
+msgstr "Tidak ada dependensi yang dinyatakan."
+
+#: src/dependencies.rs:261
+msgid "Declared dependency (not an installed-status check)"
+msgstr "Dependensi yang dinyatakan (bukan pemeriksaan status pemasangan)"
+
+#: src/dependencies.rs:263 src/dependencies.rs:276
+msgid "Will be installed"
+msgstr "Akan dipasang"
+
+#: src/dependencies.rs:273
+msgid "Additional packages to be installed"
+msgstr "Paket tambahan yang akan dipasang"
+
+#: src/dependencies.rs:274
+msgid ""
+"APT preview, including indirect dependencies. The plan may change before "
+"installation."
+msgstr "Pratinjau APT, termasuk dependensi tidak langsung. Rencana dapat berubah sebelum pemasangan."
+
+#: src/dependencies.rs:280
+msgid "APT installation plan unavailable"
+msgstr "Rencana pemasangan APT tidak tersedia"
+
+#: src/operations.rs:31 src/ui/selection.rs:285
+msgid "Error reading package"
+msgstr "Kesalahan saat membaca paket"
+
+#: src/operations.rs:55
+msgid "Unable to start pkexec."
+msgstr "Tidak dapat memulai pkexec."
+
+#: src/operations.rs:91
+msgid "Authorization was cancelled or the process failed."
+msgstr "Otorisasi dibatalkan atau proses gagal."
+
+#: src/package.rs:112 src/package.rs:117 src/package.rs:121
+msgid "Install"
+msgstr "Pasang"
+
+#: src/package.rs:130
+msgid "Upgrade"
+msgstr "Tingkatkan"
+
+#: src/package.rs:132
+msgid "Reinstall"
+msgstr "Pasang Ulang"
+
+#: src/ui/actions.rs:23
+msgid "Unable to launch application"
+msgstr "Tidak dapat menjalankan aplikasi"
+
+#: src/ui/actions.rs:26
+msgid "Close"
+msgstr "Tutup"
+
+#: src/ui/mod.rs:32
+msgid "Debian Package Installer"
+msgstr "Pemasang Paket Debian"
+
+#: src/ui/mod.rs:141
+msgid "Debby contributors"
+msgstr "Kontributor Debby"
+
+#: src/ui/mod.rs:143
+msgid ""
+"Debby makes installing local Debian packages simple. Open a .deb file to "
+"view package details, compare installed and selected versions, and install, "
+"upgrade, reinstall, or uninstall the package. Follow each operation on a "
+"dedicated progress screen and view dependencies and command output in the "
+"Details panel."
+msgstr "Debby memudahkan pemasangan paket Debian lokal. Buka berkas .deb untuk melihat rincian paket, membandingkan versi terpasang dan versi yang dipilih, serta memasang, meningkatkan, memasang ulang, atau mencopot paket. Pantau setiap operasi pada layar kemajuan khusus dan lihat dependensi serta keluaran perintah di panel Rincian."
+
+#: src/ui/mod.rs:259 src/ui/progress.rs:83
+msgid "Starting installation…"
+msgstr "Memulai pemasangan…"
+
+#: src/ui/progress.rs:81 src/ui/progress.rs:91 src/ui/progress.rs:99
+msgid "Uninstalling…"
+msgstr "Mencopot…"
+
+#: src/ui/progress.rs:93 src/ui/progress.rs:107
+msgid "Installation in progress…"
+msgstr "Pemasangan sedang berlangsung…"
+
+#: src/ui/progress.rs:101
+msgid "Installing…"
+msgstr "Memasang…"
+
+#: src/ui/progress.rs:130
+msgid "Complete"
+msgstr "Selesai"
+
+#: src/ui/progress.rs:134
+msgid "Uninstallation complete"
+msgstr "Pencopotan selesai"
+
+#: src/ui/progress.rs:136
+msgid "Installation complete"
+msgstr "Pemasangan selesai"
+
+#: src/ui/progress.rs:142
+msgid "Package installed successfully!"
+msgstr "Paket berhasil dipasang!"
+
+#: src/ui/progress.rs:156
+msgid "Uninstallation failed"
+msgstr "Pencopotan gagal"
+
+#: src/ui/progress.rs:158
+msgid "Installation failed"
+msgstr "Pemasangan gagal"
+
+#: src/ui/progress.rs:162 src/ui/progress.rs:168
+msgid "Error"
+msgstr "Kesalahan"
+
+#: src/ui/progress.rs:166
+msgid "Installation failed."
+msgstr "Pemasangan gagal."
+
+#: src/ui/selection.rs:119
+msgid "Choose a .deb package"
+msgstr "Pilih paket .deb"
+
+#: src/ui/selection.rs:120
+msgid "Open"
+msgstr "Buka"
+
+#: src/ui/selection.rs:121
+msgid "Cancel"
+msgstr "Batal"
+
+#: src/ui/selection.rs:127
+msgid "Debian packages (*.deb)"
+msgstr "Paket Debian (*.deb)"
+
+#: src/ui/selection.rs:233
+#, rust-format
+msgid "{version} (installed version is {installed})"
+msgstr "{version} (versi terpasang adalah {installed})"
+
+#: src/ui/selection.rs:239
+msgid "Unknown"
+msgstr "Tidak diketahui"
+
+#: src/ui/selection.rs:272
+msgid "Package name"
+msgstr "Nama paket"
+
+#: src/ui/selection.rs:274
+msgid "Version"
+msgstr "Versi"
+
+msgid "Back"
+msgstr "Kembali"
+
+msgid "Debby"
+msgstr "Debby"
+
+msgid "Main Menu"
+msgstr "Menu Utama"
+
+msgid "Install a Debian package"
+msgstr "Pasang paket Debian"
+
+msgid "Choose a .deb package to view its details and install it."
+msgstr "Pilih paket .deb untuk melihat rinciannya dan memasangnya."
+
+msgid "Choose Package…"
+msgstr "Pilih Paket…"
+
+msgid "Information"
+msgstr "Informasi"
+
+msgid "Package version"
+msgstr "Versi paket"
+
+msgid "Installed size"
+msgstr "Ukuran setelah dipasang"
+
+msgid "Description"
+msgstr "Deskripsi"
+
+msgid "Dependencies"
+msgstr "Dependensi"
+
+msgid "Run"
+msgstr "Jalankan"
+
+msgid "Uninstall"
+msgstr "Copot"
+
+msgid "Details"
+msgstr "Rincian"
+
+msgid "About Debby"
+msgstr "Tentang Debby"
+
+msgid "No package selected"
+msgstr "Tidak ada paket yang dipilih"

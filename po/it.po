@@ -1,0 +1,227 @@
+# Italian translations for Debby.
+# This file is distributed under the same license as the debby package.
+msgid ""
+msgstr ""
+"Project-Id-Version: debby 0.1.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-11-21 20:07+0100\n"
+"PO-Revision-Date: 2026-11-21 00:00+0000\n"
+"Last-Translator: Debby contributors\n"
+"Language-Team: Italian\n"
+"Language: it\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: src/dependencies.rs:219
+msgid "Checking dependencies…"
+msgstr "Verifica delle dipendenze…"
+
+#: src/dependencies.rs:235 src/dependencies.rs:268
+msgid "Dependency information unavailable"
+msgstr "Informazioni sulle dipendenze non disponibili"
+
+#: src/dependencies.rs:244
+msgid "No declared dependencies."
+msgstr "Nessuna dipendenza dichiarata."
+
+#: src/dependencies.rs:261
+msgid "Declared dependency (not an installed-status check)"
+msgstr "Dipendenza dichiarata (non verifica se è installata)"
+
+#: src/dependencies.rs:263 src/dependencies.rs:276
+msgid "Will be installed"
+msgstr "Verrà installato"
+
+#: src/dependencies.rs:273
+msgid "Additional packages to be installed"
+msgstr "Pacchetti aggiuntivi da installare"
+
+#: src/dependencies.rs:274
+msgid ""
+"APT preview, including indirect dependencies. The plan may change before "
+"installation."
+msgstr "Anteprima di APT, incluse le dipendenze indirette. Il piano potrebbe cambiare prima dell’installazione."
+
+#: src/dependencies.rs:280
+msgid "APT installation plan unavailable"
+msgstr "Piano di installazione di APT non disponibile"
+
+#: src/operations.rs:31 src/ui/selection.rs:285
+msgid "Error reading package"
+msgstr "Errore nella lettura del pacchetto"
+
+#: src/operations.rs:55
+msgid "Unable to start pkexec."
+msgstr "Impossibile avviare pkexec."
+
+#: src/operations.rs:91
+msgid "Authorization was cancelled or the process failed."
+msgstr "L’autorizzazione è stata annullata o il processo non è riuscito."
+
+#: src/package.rs:112 src/package.rs:117 src/package.rs:121
+msgid "Install"
+msgstr "Installa"
+
+#: src/package.rs:130
+msgid "Upgrade"
+msgstr "Aggiorna"
+
+#: src/package.rs:132
+msgid "Reinstall"
+msgstr "Reinstalla"
+
+#: src/ui/actions.rs:23
+msgid "Unable to launch application"
+msgstr "Impossibile avviare l’applicazione"
+
+#: src/ui/actions.rs:26
+msgid "Close"
+msgstr "Chiudi"
+
+#: src/ui/mod.rs:32
+msgid "Debian Package Installer"
+msgstr "Installatore di pacchetti Debian"
+
+#: src/ui/mod.rs:141
+msgid "Debby contributors"
+msgstr "Collaboratori di Debby"
+
+#: src/ui/mod.rs:143
+msgid ""
+"Debby makes installing local Debian packages simple. Open a .deb file to "
+"view package details, compare installed and selected versions, and install, "
+"upgrade, reinstall, or uninstall the package. Follow each operation on a "
+"dedicated progress screen and view dependencies and command output in the "
+"Details panel."
+msgstr "Debby semplifica l’installazione dei pacchetti Debian locali. Apri un file .deb per visualizzare i dettagli del pacchetto, confrontare le versioni installata e selezionata e installare, aggiornare, reinstallare o disinstallare il pacchetto. Segui ogni operazione in una schermata di avanzamento dedicata e consulta le dipendenze e l’output dei comandi nel pannello Dettagli."
+
+#: src/ui/mod.rs:259 src/ui/progress.rs:83
+msgid "Starting installation…"
+msgstr "Avvio dell’installazione…"
+
+#: src/ui/progress.rs:81 src/ui/progress.rs:91 src/ui/progress.rs:99
+msgid "Uninstalling…"
+msgstr "Disinstallazione…"
+
+#: src/ui/progress.rs:93 src/ui/progress.rs:107
+msgid "Installation in progress…"
+msgstr "Installazione in corso…"
+
+#: src/ui/progress.rs:101
+msgid "Installing…"
+msgstr "Installazione…"
+
+#: src/ui/progress.rs:130
+msgid "Complete"
+msgstr "Completato"
+
+#: src/ui/progress.rs:134
+msgid "Uninstallation complete"
+msgstr "Disinstallazione completata"
+
+#: src/ui/progress.rs:136
+msgid "Installation complete"
+msgstr "Installazione completata"
+
+#: src/ui/progress.rs:142
+msgid "Package installed successfully!"
+msgstr "Pacchetto installato correttamente!"
+
+#: src/ui/progress.rs:156
+msgid "Uninstallation failed"
+msgstr "Disinstallazione non riuscita"
+
+#: src/ui/progress.rs:158
+msgid "Installation failed"
+msgstr "Installazione non riuscita"
+
+#: src/ui/progress.rs:162 src/ui/progress.rs:168
+msgid "Error"
+msgstr "Errore"
+
+#: src/ui/progress.rs:166
+msgid "Installation failed."
+msgstr "Installazione non riuscita."
+
+#: src/ui/selection.rs:119
+msgid "Choose a .deb package"
+msgstr "Scegli un pacchetto .deb"
+
+#: src/ui/selection.rs:120
+msgid "Open"
+msgstr "Apri"
+
+#: src/ui/selection.rs:121
+msgid "Cancel"
+msgstr "Annulla"
+
+#: src/ui/selection.rs:127
+msgid "Debian packages (*.deb)"
+msgstr "Pacchetti Debian (*.deb)"
+
+#: src/ui/selection.rs:233
+#, rust-format
+msgid "{version} (installed version is {installed})"
+msgstr "{version} (la versione installata è {installed})"
+
+#: src/ui/selection.rs:239
+msgid "Unknown"
+msgstr "Sconosciuto"
+
+#: src/ui/selection.rs:272
+msgid "Package name"
+msgstr "Nome del pacchetto"
+
+#: src/ui/selection.rs:274
+msgid "Version"
+msgstr "Versione"
+
+msgid "Back"
+msgstr "Indietro"
+
+msgid "Debby"
+msgstr "Debby"
+
+msgid "Main Menu"
+msgstr "Menu principale"
+
+msgid "Install a Debian package"
+msgstr "Installa un pacchetto Debian"
+
+msgid "Choose a .deb package to view its details and install it."
+msgstr "Scegli un pacchetto .deb per visualizzarne i dettagli e installarlo."
+
+msgid "Choose Package…"
+msgstr "Scegli pacchetto…"
+
+msgid "Information"
+msgstr "Informazioni"
+
+msgid "Package version"
+msgstr "Versione del pacchetto"
+
+msgid "Installed size"
+msgstr "Dimensione installata"
+
+msgid "Description"
+msgstr "Descrizione"
+
+msgid "Dependencies"
+msgstr "Dipendenze"
+
+msgid "Run"
+msgstr "Esegui"
+
+msgid "Uninstall"
+msgstr "Disinstalla"
+
+msgid "Details"
+msgstr "Dettagli"
+
+msgid "About Debby"
+msgstr "Informazioni su Debby"
+
+msgid "No package selected"
+msgstr "Nessun pacchetto selezionato"
