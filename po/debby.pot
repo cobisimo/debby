@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: debby 0.1.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-10 01:16+0100\n"
+"POT-Creation-Date: 2026-11-21 20:07+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,55 +17,81 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/main.rs:78
+#: src/dependencies.rs:219
+msgid "Checking dependencies…"
+msgstr ""
+
+#: src/dependencies.rs:235 src/dependencies.rs:268
+msgid "Dependency information unavailable"
+msgstr ""
+
+#: src/dependencies.rs:244
 msgid "No declared dependencies."
 msgstr ""
 
-#: src/main.rs:128 src/main.rs:133 src/main.rs:137
-msgid "Install"
+#: src/dependencies.rs:261
+msgid "Declared dependency (not an installed-status check)"
 msgstr ""
 
-#: src/main.rs:146
-msgid "Upgrade"
+#: src/dependencies.rs:263 src/dependencies.rs:276
+msgid "Will be installed"
 msgstr ""
 
-#: src/main.rs:148
-msgid "Reinstall"
+#: src/dependencies.rs:273
+msgid "Additional packages to be installed"
 msgstr ""
 
-#: src/main.rs:189
-msgid "Not installed"
+#: src/dependencies.rs:274
+msgid ""
+"APT preview, including indirect dependencies. The plan may change before "
+"installation."
 msgstr ""
 
-#: src/main.rs:199
-msgid "Package name"
+#: src/dependencies.rs:280
+msgid "APT installation plan unavailable"
 msgstr ""
 
-#: src/main.rs:201
-msgid "Version"
-msgstr ""
-
-#: src/main.rs:203
-msgid "Dependencies"
-msgstr ""
-
-#: src/main.rs:212 src/main.rs:602
+#: src/operations.rs:31 src/ui/selection.rs:285
 msgid "Error reading package"
 msgstr ""
 
-#: src/main.rs:239
+#: src/operations.rs:55
+msgid "Unable to start pkexec."
+msgstr ""
+
+#: src/operations.rs:91
+msgid "Authorization was cancelled or the process failed."
+msgstr ""
+
+#: src/package.rs:112 src/package.rs:117 src/package.rs:121
+msgid "Install"
+msgstr ""
+
+#: src/package.rs:130
+msgid "Upgrade"
+msgstr ""
+
+#: src/package.rs:132
+msgid "Reinstall"
+msgstr ""
+
+#: src/ui/actions.rs:23
+msgid "Unable to launch application"
+msgstr ""
+
+#: src/ui/actions.rs:26
+msgid "Close"
+msgstr ""
+
+#: src/ui/mod.rs:32
 msgid "Debian Package Installer"
 msgstr ""
 
-#: src/main.rs:287
-msgid "Uninstall"
-msgstr ""
-
-#: src/main.rs:317
+#: src/ui/mod.rs:141
 msgid "Debby contributors"
 msgstr ""
 
-#: src/main.rs:319
+#: src/ui/mod.rs:143
 msgid ""
 "Debby makes installing local Debian packages simple. Open a .deb file to "
 "view package details, compare installed and selected versions, and install, "
@@ -74,76 +100,85 @@ msgid ""
 "Details panel."
 msgstr ""
 
-#: src/main.rs:424 src/main.rs:434 src/main.rs:442
-msgid "Uninstalling…"
-msgstr ""
-
-#: src/main.rs:426 src/main.rs:594
+#: src/ui/mod.rs:259 src/ui/progress.rs:83
 msgid "Starting installation…"
 msgstr ""
 
-#: src/main.rs:436 src/main.rs:450
+#: src/ui/progress.rs:81 src/ui/progress.rs:91 src/ui/progress.rs:99
+msgid "Uninstalling…"
+msgstr ""
+
+#: src/ui/progress.rs:93 src/ui/progress.rs:107
 msgid "Installation in progress…"
 msgstr ""
 
-#: src/main.rs:444
+#: src/ui/progress.rs:101
 msgid "Installing…"
 msgstr ""
 
-#: src/main.rs:465
+#: src/ui/progress.rs:130
 msgid "Complete"
 msgstr ""
 
-#: src/main.rs:469
+#: src/ui/progress.rs:134
 msgid "Uninstallation complete"
 msgstr ""
 
-#: src/main.rs:471
+#: src/ui/progress.rs:136
 msgid "Installation complete"
 msgstr ""
 
-#: src/main.rs:477
+#: src/ui/progress.rs:142
 msgid "Package installed successfully!"
 msgstr ""
 
-#: src/main.rs:489
+#: src/ui/progress.rs:156
 msgid "Uninstallation failed"
 msgstr ""
 
-#: src/main.rs:491
+#: src/ui/progress.rs:158
 msgid "Installation failed"
 msgstr ""
 
-#: src/main.rs:495 src/main.rs:501
+#: src/ui/progress.rs:162 src/ui/progress.rs:168
 msgid "Error"
 msgstr ""
 
-#: src/main.rs:499
+#: src/ui/progress.rs:166
 msgid "Installation failed."
 msgstr ""
 
-#: src/main.rs:523
+#: src/ui/selection.rs:119
 msgid "Choose a .deb package"
 msgstr ""
 
-#: src/main.rs:524
+#: src/ui/selection.rs:120
 msgid "Open"
 msgstr ""
 
-#: src/main.rs:525
+#: src/ui/selection.rs:121
 msgid "Cancel"
 msgstr ""
 
-#: src/main.rs:531
+#: src/ui/selection.rs:127
 msgid "Debian packages (*.deb)"
 msgstr ""
 
-#: src/main.rs:631
-msgid "Unable to start pkexec."
+#: src/ui/selection.rs:233
+#, rust-format
+msgid "{version} (installed version is {installed})"
 msgstr ""
 
-#: src/main.rs:659
-msgid "Authorization was cancelled or the process failed."
+#: src/ui/selection.rs:239
+msgid "Unknown"
+msgstr ""
+
+#: src/ui/selection.rs:272
+msgid "Package name"
+msgstr ""
+
+#: src/ui/selection.rs:274
+msgid "Version"
 msgstr ""
 
 msgid "Back"
@@ -167,16 +202,22 @@ msgstr ""
 msgid "Information"
 msgstr ""
 
-msgid "Package Information"
+msgid "Package version"
 msgstr ""
 
-msgid "Version (installed → selected)"
+msgid "Installed size"
 msgstr ""
 
 msgid "Description"
 msgstr ""
 
+msgid "Dependencies"
+msgstr ""
+
 msgid "Run"
+msgstr ""
+
+msgid "Uninstall"
 msgstr ""
 
 msgid "Details"
@@ -186,36 +227,4 @@ msgid "About Debby"
 msgstr ""
 
 msgid "No package selected"
-msgstr ""
-
-#: src/main.rs
-msgid "Checking dependencies…"
-msgstr ""
-
-#: src/main.rs
-msgid "Dependency information unavailable"
-msgstr ""
-
-#: src/main.rs
-msgid "Declared dependency (not an installed-status check)"
-msgstr ""
-
-#: src/main.rs
-msgid "Will be installed"
-msgstr ""
-
-#: src/main.rs
-msgid "Additional packages to be installed"
-msgstr ""
-
-#: src/main.rs
-msgid "APT preview, including indirect dependencies. The plan may change before installation."
-msgstr ""
-
-#: src/main.rs
-msgid "No additional packages will be installed."
-msgstr ""
-
-#: src/main.rs
-msgid "APT installation plan unavailable"
 msgstr ""

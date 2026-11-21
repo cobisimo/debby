@@ -25,10 +25,22 @@ button.success-action {
   color: @success_fg_color;
 }
 
+button.circular.icon-action {
+  min-width: 24px;
+  min-height: 24px;
+  padding: 12px;
+}
+
+button.pill.package-action {
+  min-height: 24px;
+  padding: 12px 24px;
+}
+
 button.warning-action {
   background-color: @warning_bg_color;
   color: @warning_fg_color;
 }
+
 
 .success-icon {
   color: @success_color;

@@ -33,68 +33,93 @@ Adw.ToolbarView toolbar {
       Gtk.StackPage {
         name: "package";
 
-        child: ScrolledWindow {
-          hscrollbar-policy: never;
+        child: Adw.Clamp package_page {
+          margin-top: 24;
+          margin-bottom: 24;
+          margin-start: 16;
+          margin-end: 16;
 
-          child: Adw.Clamp package_page {
-            margin-top: 24;
-            margin-bottom: 24;
-            margin-start: 16;
-            margin-end: 16;
+          child: Box list_box {
+            orientation: vertical;
+            spacing: 20;
 
-            child: Box list_box {
-              orientation: vertical;
-              spacing: 20;
+            Adw.StatusPage empty_page {
+              icon-name: "com.cobisimo.Debby";
+              title: _("Install a Debian package");
+              description: _("Choose a .deb package to view its details and install it.");
 
-              Adw.StatusPage empty_page {
-                icon-name: "com.cobisimo.Debby";
-                title: _("Install a Debian package");
-                description: _("Choose a .deb package to view its details and install it.");
+              Button select_button {
+                styles [
+                  "suggested-action",
+                  "pill",
+                  "package-action",
+                ]
 
-                Button select_button {
-                  accessibility {
-                    label: _("Choose Package…");
+                accessibility {
+                  label: _("Choose Package…");
+                }
+
+                child: Box {
+                  spacing: 6;
+                  halign: center;
+
+                  Image {
+                    icon-name: "document-open-symbolic";
+                    pixel-size: 24;
+                    accessible-role: presentation;
                   }
 
-                  child: Box {
-                    spacing: 6;
-                    halign: center;
+                  Label {
+                    label: _("Choose Package…");
+                  }
+                };
+              }
+            }
 
-                    Image {
-                      icon-name: "document-open-symbolic";
-                      accessible-role: presentation;
-                    }
+            Box package_details {
+              orientation: vertical;
+              spacing: 20;
+              visible: false;
 
-                    Label {
-                      label: _("Choose Package…");
-                    }
-                  };
-                }
+              Image package_icon {
+                icon-name: "package-x-generic";
+                pixel-size: 128;
+                halign: center;
+                accessible-role: presentation;
               }
 
-              Box package_details {
-                orientation: vertical;
-                spacing: 20;
-                visible: false;
+              Label package_name {
+                label: "";
+                halign: center;
+                wrap: true;
+                wrap-mode: word_char;
+                justify: center;
 
-                Image package_icon {
-                  icon-name: "package-x-generic";
-                  pixel-size: 128;
-                  halign: center;
-                  accessible-role: presentation;
-                }
+                styles [
+                  "title-2",
+                ]
+              }
 
-                StackSwitcher {
-                  halign: center;
-                  stack: package_stack;
-                }
+              StackSwitcher {
+                halign: center;
+                stack: package_stack;
+              }
 
-                Stack package_stack {
-                  transition-type: crossfade;
+              Stack package_stack {
+                transition-type: crossfade;
+                vexpand: true;
+                vhomogeneous: false;
 
-                  Gtk.StackPage {
-                    name: "information";
-                    title: _("Information");
+                Gtk.StackPage {
+                  name: "information";
+                  title: _("Information");
+
+                  child: ScrolledWindow {
+                    vexpand: true;
+                    hscrollbar-policy: never;
+                    min-content-height: 120;
+                    propagate-natural-height: false;
+                    propagate-natural-width: false;
 
                     child: Box {
                       orientation: vertical;
@@ -103,13 +128,17 @@ Adw.ToolbarView toolbar {
                       Adw.PreferencesGroup info_group {
                         visible: false;
 
-                        Adw.ActionRow name_row {
-                          title: _("Package name");
+                        Adw.ActionRow package_version_row {
+                          title: _("Package version");
                           subtitle: "-";
+
+                          styles [
+                            "package-version",
+                          ]
                         }
 
-                        Adw.ActionRow version_row {
-                          title: _("Version (installed → selected)");
+                        Adw.ActionRow installed_size_row {
+                          title: _("Installed size");
                           subtitle: "-";
                         }
 
@@ -119,11 +148,19 @@ Adw.ToolbarView toolbar {
                         }
                       }
                     };
-                  }
+                  };
+                }
 
-                  Gtk.StackPage {
-                    name: "dependencies";
-                    title: _("Dependencies");
+                Gtk.StackPage {
+                  name: "dependencies";
+                  title: _("Dependencies");
+
+                  child: ScrolledWindow {
+                    vexpand: true;
+                    hscrollbar-policy: never;
+                    min-content-height: 120;
+                    propagate-natural-height: false;
+                    propagate-natural-width: false;
 
                     child: Adw.PreferencesGroup dependencies_group {
                       ListBox dependency_rows {
@@ -134,98 +171,10 @@ Adw.ToolbarView toolbar {
                         ]
                       }
                     };
-                  }
-                }
-
-                Box controls_box {
-                  orientation: horizontal;
-                  spacing: 12;
-                  halign: center;
-                  visible: false;
-
-                  Button package_launch_button {
-                    accessibility {
-                      label: _("Run");
-                    }
-
-                    child: Box {
-                      spacing: 6;
-                      halign: center;
-
-                      Image {
-                        icon-name: "media-playback-start-symbolic";
-                        accessible-role: presentation;
-                      }
-
-                      Label {
-                        label: _("Run");
-                      }
-                    };
-
-                    visible: false;
-
-                    styles [
-                      "success-action",
-                      "pill",
-                    ]
-                  }
-
-                  Button install_button {
-                    accessibility {
-                      label: _("Install");
-                    }
-
-                    child: Box {
-                      spacing: 6;
-                      halign: center;
-
-                      Image install_button_icon {
-                        icon-name: "system-software-install-symbolic";
-                        accessible-role: presentation;
-                      }
-
-                      Label install_button_text {
-                        label: _("Install");
-                      }
-                    };
-
-                    sensitive: false;
-
-                    styles [
-                      "suggested-action",
-                      "pill",
-                    ]
-                  }
-
-                  Button uninstall_button {
-                    accessibility {
-                      label: _("Uninstall");
-                    }
-
-                    child: Box {
-                      spacing: 6;
-                      halign: center;
-
-                      Image {
-                        icon-name: "user-trash-symbolic";
-                        accessible-role: presentation;
-                      }
-
-                      Label {
-                        label: _("Uninstall");
-                      }
-                    };
-
-                    styles [
-                      "destructive-action",
-                      "pill",
-                    ]
-
-                    visible: false;
-                  }
+                  };
                 }
               }
-            };
+            }
           };
         };
       }
@@ -275,34 +224,6 @@ Adw.ToolbarView toolbar {
             }
           }
 
-          Button launch_button {
-            accessibility {
-              label: _("Run");
-            }
-
-            child: Box {
-              spacing: 6;
-              halign: center;
-
-              Image {
-                icon-name: "media-playback-start-symbolic";
-                accessible-role: presentation;
-              }
-
-              Label {
-                label: _("Run");
-              }
-            };
-
-            halign: center;
-            visible: false;
-
-            styles [
-              "success-action",
-              "pill",
-            ]
-          }
-
           Label progress_error {
             label: "";
             wrap: true;
@@ -343,21 +264,147 @@ Adw.ToolbarView toolbar {
 
   [bottom]
   Adw.Bin footer {
-    halign: end;
-    margin-end: 16;
-    margin-top: 6;
-    margin-bottom: 6;
+    margin-start: 12;
+    margin-end: 12;
+    margin-top: 12;
+    margin-bottom: 12;
 
-    child: ToggleButton advanced_check {
-      icon-name: "utilities-terminal-symbolic";
-      tooltip-text: _("Details");
+    child: CenterBox {
+      [center]
+      Box {
+        halign: center;
 
-      styles [
-        "flat",
-      ]
+        Box controls_box {
+          orientation: horizontal;
+          spacing: 12;
+          halign: center;
+          visible: false;
 
-      accessibility {
-        label: _("Details");
+          Button package_launch_button {
+            accessibility {
+              label: _("Run");
+            }
+
+            child: Image {
+              icon-name: "media-playback-start-symbolic";
+              pixel-size: 24;
+              accessible-role: presentation;
+            };
+
+            tooltip-text: _("Run");
+            halign: center;
+            valign: center;
+            visible: false;
+
+            styles [
+              "success-action",
+              "circular",
+              "icon-action",
+            ]
+          }
+
+          Button install_button {
+            accessibility {
+              label: _("Install");
+            }
+
+            child: Box {
+              spacing: 6;
+              halign: center;
+
+              Image {
+                icon-name: "system-software-install-symbolic";
+                pixel-size: 24;
+                accessible-role: presentation;
+              }
+
+              Label install_label {
+                label: _("Install");
+              }
+            };
+
+            tooltip-text: _("Install");
+            sensitive: false;
+
+            styles [
+              "suggested-action",
+              "pill",
+              "package-action",
+            ]
+          }
+
+          Button uninstall_button {
+            accessibility {
+              label: _("Uninstall");
+            }
+
+            child: Image {
+              icon-name: "user-trash-symbolic";
+              pixel-size: 24;
+              accessible-role: presentation;
+            };
+
+            tooltip-text: _("Uninstall");
+            halign: center;
+            valign: center;
+
+            styles [
+              "destructive-action",
+              "circular",
+              "icon-action",
+            ]
+
+            visible: false;
+          }
+        }
+
+        Button launch_button {
+          accessibility {
+            label: _("Run");
+          }
+
+          child: Box {
+            spacing: 6;
+            halign: center;
+
+            Image {
+              icon-name: "media-playback-start-symbolic";
+              pixel-size: 24;
+              accessible-role: presentation;
+            }
+
+            Label {
+              label: _("Run");
+            }
+          };
+
+          tooltip-text: _("Run");
+          halign: center;
+          valign: center;
+          visible: false;
+
+          styles [
+            "success-action",
+            "pill",
+            "package-action",
+          ]
+        }
+      }
+
+      [end]
+      ToggleButton advanced_check {
+        halign: end;
+        valign: center;
+        icon-name: "utilities-terminal-symbolic";
+        tooltip-text: _("Details");
+
+        styles [
+          "flat",
+        ]
+
+        accessibility {
+          label: _("Details");
+        }
       }
     };
   }
@@ -367,6 +414,35 @@ menu app_menu {
   item {
     label: _("Choose Package…");
     action: "win.open";
+  }
+
+  section package_menu {
+    item {
+      label: _("Run");
+      action: "win.launch";
+    }
+
+    item {
+      label: _("Install");
+      action: "win.install";
+    }
+
+    item {
+      label: _("Uninstall");
+      action: "win.uninstall";
+    }
+  }
+
+  section {
+    item {
+      label: _("Back");
+      action: "win.back";
+    }
+
+    item {
+      label: _("Details");
+      action: "win.details";
+    }
   }
 
   item {

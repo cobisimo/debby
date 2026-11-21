@@ -1,3 +1,12 @@
 # Translation sources
+src/dependencies.rs
+src/i18n.rs
 src/main.rs
+src/operations.rs
+src/package.rs
+src/package_icon.rs
+src/ui/actions.rs
+src/ui/mod.rs
+src/ui/progress.rs
+src/ui/selection.rs
 data/window.blp
