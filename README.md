@@ -7,7 +7,74 @@ packages that are already installed.
 
 ![Debby application screenshot](data/screenshot.png)
 
-## Build a Debian package
+## Build amd64 and arm64 packages with Docker
+
+On an amd64 Linux PC, use Docker Engine with the Buildx plugin and a
+`docker-container` builder. No host Rust or GTK development packages are needed.
+The script uses Docker (not Podman), your selected builder, and its configured
+Docker context. It never installs tools, registers emulators, or creates builders.
+
+For ARM64 emulation, configure QEMU/binfmt once if your builder does not already
+provide it. **The following optional command is privileged and changes the host's
+binfmt registrations; run it only if you trust the image and approve that change:**
+
+```sh
+docker run --privileged --rm tonistiigi/binfmt --install arm64
+```
+
+Create and select a builder once (choose another name if this one exists), or
+select an existing suitable builder with `docker buildx use <name>`:
+
+```sh
+docker buildx create --name debby-builder --driver docker-container --use
+docker buildx inspect --bootstrap
+```
+
+Check that the reported platforms include `linux/amd64` and `linux/arm64`, then:
+
+```sh
+bash scripts/build-multiarch.sh
+bash scripts/build-multiarch.sh --arch arm64 --output './packages for arm64'
+DEB_REVISION=2 DEB_MAINTAINER='Your Name <you@example.com>' bash scripts/build-multiarch.sh --arch all
+bash scripts/build-multiarch.sh --help
+```
+
+`--arch` accepts `amd64`, `arm64`, or `all` (the default). Output defaults to the
+project's `dist/`; explicit relative output paths are relative to your current
+working directory. Buildx exports the scratch `artifacts` stage into temporary
+platform directories (`linux_amd64/` and `linux_arm64/`). The script checks for
+one package per requested architecture, then flattens them into the output:
+
+```text
+dist/debby_<version>-<revision>_amd64.deb
+dist/debby_<version>-<revision>_arm64.deb
+```
+
+Existing packages with identical names are replaced; unrelated files are not
+removed. The temporary export is cleaned up on exit. Only `.deb` artifacts are
+exported, not an image to load or push. The local exporter writes host-user-owned
+files; no host `sudo`, `chmod`, or `chown` is needed by the script.
+
+The Dockerfile uses official `rust:1-trixie` (a floating Rust 1.x toolchain with
+Rust 2024 edition support) and Debian trixie's GTK/libadwaita development packages.
+Bookworm's libadwaita is too old for this project's `v1_5` requirement. Each target
+runs the existing native `scripts/build-deb.sh`, including Blueprint, gettext,
+and `dpkg-shlibdeps`, under QEMU when necessary; this is not Cargo cross-compilation.
+Cargo registry, Git, and build caches are separated by target architecture.
+Host `target/`, `dist/`, and `.git/` are excluded from the build context. Keep any
+custom output directory outside the source tree to avoid sending old artifacts
+in subsequent builds.
+
+Builds require network access for container images, Debian packages, and Cargo
+crates. Initial ARM64 builds under emulation can be slow and memory-intensive.
+Base images and apt packages float, so builds are not bit-for-bit reproducible.
+These packages target **Debian trixie**, not every Debian/Ubuntu release: install
+only the package matching the destination machine's architecture, on a system
+providing the generated shared-library dependencies and libadwaita >= 1.5.
+Older distributions (including bookworm) are not supported by these artifacts;
+Ubuntu compatibility depends on its available library versions.
+
+## Build a native Debian package
 
 Install Rust/Cargo and the native build dependencies listed below. Packaging
 also requires `dpkg-dev`, `gettext`, and `blueprint-compiler`:
